@@ -5,11 +5,11 @@
   <title>メールの宛先・CC・BCCの説明</title>
   <style>
     body { font-family: sans-serif; padding: 20px; background: #f0f0f0; }
-    .container { display: flex; gap: 10px; flex-wrap: nowrap; }
+    .container { display: flex; gap: 10px; flex-wrap: wrap; }
     .form { background: #fff; padding: 20px; border-radius: 10px; width: 100%; margin-bottom: 20px; }
     .selector-row { display: flex; gap: 10px; }
     .selector { flex: 1; }
-    .receiver { background: #fff; padding: 10px; border-radius: 10px; flex: 1; min-width: 0; box-sizing: border-box; }
+    .receiver { background: #fff; padding: 10px; border-radius: 10px; flex: 1; min-width: 200px; box-sizing: border-box; }
     .grayed { color: #aaa; background: #eee; }
     select, textarea, button { width: 100%; margin: 10px 0; }
     .status { margin-top: 10px; padding: 5px; border-top: 1px solid #ccc; font-size: 0.9em; }
@@ -51,7 +51,7 @@
     </div>
 
     <label>本文:</label>
-    <textarea id="body" rows="4"></textarea>
+    <textarea id="body" rows="4">あそぼう</textarea>
     <button onclick="sendEmail()">送信</button>
   </div>
 
@@ -75,6 +75,13 @@
   </div>
 
   <script>
+    const emojiMap = {
+      kuma: '🐻',
+      moko: '🐏',
+      piyo: '🐣',
+      waon: '🐕'
+    };
+
     function sendEmail() {
       const to = Array.from(document.getElementById('to').selectedOptions).map(o => o.value);
       const cc = Array.from(document.getElementById('cc').selectedOptions).map(o => o.value);
@@ -91,14 +98,13 @@
           box.classList.remove('grayed');
           content += '<strong>From:</strong> 🐈@shinajo.ed.jp<br>';
 
-          const visibleTo = to.filter(r => to.includes(id)).map(r => `${emojiMap[r]}@shinajo.ed.jp`).join(', ');
-          const visibleCc = cc.filter(r => cc.includes(id)).map(r => `${emojiMap[r]}@shinajo.ed.jp`).join(', ');
+          const visibleTo = to.map(r => `${emojiMap[r]}@shinajo.ed.jp`).join(', ');
+          const visibleCc = cc.map(r => `${emojiMap[r]}@shinajo.ed.jp`).join(', ');
 
           if (visibleTo) content += `<strong>To:</strong> ${visibleTo}<br>`;
           if (visibleCc) content += `<strong>CC:</strong> ${visibleCc}<br>`;
 
           content += `<strong>本文:</strong><br>${body}`;
-
         } else if (bcc.includes(id)) {
           box.classList.remove('grayed');
           content += '<strong>From:</strong> 🐈@shinajo.ed.jp<br>';
@@ -111,13 +117,6 @@
         status.innerHTML = content;
       });
     }
-
-    const emojiMap = {
-      kuma: '🐻',
-      moko: '🐏',
-      piyo: '🐣',
-      waon: '🐕'
-    };
   </script>
 </body>
 </html>
