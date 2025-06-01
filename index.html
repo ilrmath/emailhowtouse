@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>メールの宛先・CC・BCCの説明</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f0f0f0; }
+    .container { display: flex; gap: 10px; flex-wrap: nowrap; }
+    .form { background: #fff; padding: 20px; border-radius: 10px; width: 100%; margin-bottom: 20px; }
+    .selector-row { display: flex; gap: 10px; }
+    .selector { flex: 1; }
+    .receiver { background: #fff; padding: 10px; border-radius: 10px; flex: 1; min-width: 0; box-sizing: border-box; }
+    .grayed { color: #aaa; background: #eee; }
+    select, textarea, button { width: 100%; margin: 10px 0; }
+    .status { margin-top: 10px; padding: 5px; border-top: 1px solid #ccc; font-size: 0.9em; }
+    .receiver h3 { margin: 0; font-size: 1em; word-break: break-word; }
+  </style>
+</head>
+<body>
+  <div class="form">
+    <h2>🐈@shinajo.ed.jp から送信</h2>
+
+    <div class="selector-row">
+      <div class="selector">
+        <label>宛先:</label>
+        <select id="to" multiple>
+          <option value="kuma">🐻@shinajo.ed.jp</option>
+          <option value="moko">🐏@shinajo.ed.jp</option>
+          <option value="piyo">🐣@shinajo.ed.jp</option>
+          <option value="waon">🐕@shinajo.ed.jp</option>
+        </select>
+      </div>
+      <div class="selector">
+        <label>CC:</label>
+        <select id="cc" multiple>
+          <option value="kuma">🐻@shinajo.ed.jp</option>
+          <option value="moko">🐏@shinajo.ed.jp</option>
+          <option value="piyo">🐣@shinajo.ed.jp</option>
+          <option value="waon">🐕@shinajo.ed.jp</option>
+        </select>
+      </div>
+      <div class="selector">
+        <label>BCC:</label>
+        <select id="bcc" multiple>
+          <option value="kuma">🐻@shinajo.ed.jp</option>
+          <option value="moko">🐏@shinajo.ed.jp</option>
+          <option value="piyo">🐣@shinajo.ed.jp</option>
+          <option value="waon">🐕@shinajo.ed.jp</option>
+        </select>
+      </div>
+    </div>
+
+    <label>本文:</label>
+    <textarea id="body" rows="4"></textarea>
+    <button onclick="sendEmail()">送信</button>
+  </div>
+
+  <div class="container">
+    <div id="kuma" class="receiver">
+      <h3>🐻@shinajo.ed.jp</h3>
+      <div class="status" id="kuma-status"></div>
+    </div>
+    <div id="moko" class="receiver">
+      <h3>🐏@shinajo.ed.jp</h3>
+      <div class="status" id="moko-status"></div>
+    </div>
+    <div id="piyo" class="receiver">
+      <h3>🐣@shinajo.ed.jp</h3>
+      <div class="status" id="piyo-status"></div>
+    </div>
+    <div id="waon" class="receiver">
+      <h3>🐕@shinajo.ed.jp</h3>
+      <div class="status" id="waon-status"></div>
+    </div>
+  </div>
+
+  <script>
+    function sendEmail() {
+      const to = Array.from(document.getElementById('to').selectedOptions).map(o => o.value);
+      const cc = Array.from(document.getElementById('cc').selectedOptions).map(o => o.value);
+      const bcc = Array.from(document.getElementById('bcc').selectedOptions).map(o => o.value);
+      const body = document.getElementById('body').value;
+      const all = ['kuma', 'moko', 'piyo', 'waon'];
+
+      all.forEach(id => {
+        const box = document.getElementById(id);
+        const status = document.getElementById(`${id}-status`);
+        let content = '';
+
+        if (to.includes(id) || cc.includes(id)) {
+          box.classList.remove('grayed');
+          content += '<strong>From:</strong> 🐈@shinajo.ed.jp<br>';
+
+          const visibleTo = to.filter(r => to.includes(id)).map(r => `${emojiMap[r]}@shinajo.ed.jp`).join(', ');
+          const visibleCc = cc.filter(r => cc.includes(id)).map(r => `${emojiMap[r]}@shinajo.ed.jp`).join(', ');
+
+          if (visibleTo) content += `<strong>To:</strong> ${visibleTo}<br>`;
+          if (visibleCc) content += `<strong>CC:</strong> ${visibleCc}<br>`;
+
+          content += `<strong>本文:</strong><br>${body}`;
+
+        } else if (bcc.includes(id)) {
+          box.classList.remove('grayed');
+          content += '<strong>From:</strong> 🐈@shinajo.ed.jp<br>';
+          content += `<strong>本文:</strong><br>${body}`;
+        } else {
+          box.classList.add('grayed');
+          content = '（メールなし）';
+        }
+
+        status.innerHTML = content;
+      });
+    }
+
+    const emojiMap = {
+      kuma: '🐻',
+      moko: '🐏',
+      piyo: '🐣',
+      waon: '🐕'
+    };
+  </script>
+</body>
+</html>
