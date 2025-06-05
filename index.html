@@ -2,121 +2,124 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>メールの宛先・CC・BCCの説明</title>
+  <title>メールの宛先・CC・BCCの動作シミュレーター</title>
   <style>
     body { font-family: sans-serif; padding: 20px; background: #f0f0f0; }
     .container { display: flex; gap: 10px; flex-wrap: wrap; }
     .form { background: #fff; padding: 20px; border-radius: 10px; width: 100%; margin-bottom: 20px; }
-    .selector-row { display: flex; gap: 10px; }
-    .selector { flex: 1; }
+    .selector-row { display: flex; gap: 20px; justify-content: space-between; flex-wrap: wrap; }
+    .selector { flex: 1; min-width: 200px; }
     .receiver { background: #fff; padding: 10px; border-radius: 10px; flex: 1; min-width: 200px; box-sizing: border-box; }
     .grayed { color: #aaa; background: #eee; }
     select, textarea, button { width: 100%; margin: 10px 0; }
-    .status { margin-top: 10px; padding: 5px; border-top: 1px solid #ccc; font-size: 0.9em; }
-    .receiver h3 { margin: 0; font-size: 1em; word-break: break-word; }
+    .status { margin-top: 10px; padding: 5px; border-top: 1px solid #ccc; font-size: 0.9em; white-space: pre-wrap; }
   </style>
 </head>
 <body>
-  <div class="form">
-    <h2>🐈@shinajo.ed.jp から送信</h2>
 
-    <div class="selector-row">
-      <div class="selector">
-        <label>宛先:</label>
-        <select id="to" multiple>
-          <option value="kuma">🐻@shinajo.ed.jp</option>
-          <option value="moko">🐏@shinajo.ed.jp</option>
-          <option value="piyo">🐣@shinajo.ed.jp</option>
-          <option value="waon">🐕@shinajo.ed.jp</option>
-        </select>
-      </div>
-      <div class="selector">
-        <label>CC:</label>
-        <select id="cc" multiple>
-          <option value="kuma">🐻@shinajo.ed.jp</option>
-          <option value="moko">🐏@shinajo.ed.jp</option>
-          <option value="piyo">🐣@shinajo.ed.jp</option>
-          <option value="waon">🐕@shinajo.ed.jp</option>
-        </select>
-      </div>
-      <div class="selector">
-        <label>BCC:</label>
-        <select id="bcc" multiple>
-          <option value="kuma">🐻@shinajo.ed.jp</option>
-          <option value="moko">🐏@shinajo.ed.jp</option>
-          <option value="piyo">🐣@shinajo.ed.jp</option>
-          <option value="waon">🐕@shinajo.ed.jp</option>
-        </select>
-      </div>
+<h1>メールの宛先・CC・BCCの動作シミュレーター</h1>
+
+<div class="form">
+  <div class="selector-row">
+    <div class="selector">
+      <label>宛先 (To):</label>
+      <select id="to" multiple>
+        <option value="kuma">🐻 kuma</option>
+        <option value="moko">🐏 moko</option>
+        <option value="piyo">🐣 piyo</option>
+        <option value="waon">🐕 waon</option>
+      </select>
     </div>
 
-    <label>本文:</label>
-    <textarea id="body" rows="4">あそぼう</textarea>
-    <button onclick="sendEmail()">送信</button>
-  </div>
+    <div class="selector">
+      <label>CC:</label>
+      <select id="cc" multiple>
+        <option value="kuma">🐻 kuma</option>
+        <option value="moko">🐏 moko</option>
+        <option value="piyo">🐣 piyo</option>
+        <option value="waon">🐕 waon</option>
+      </select>
+    </div>
 
-  <div class="container">
-    <div id="kuma" class="receiver">
-      <h3>🐻@shinajo.ed.jp</h3>
-      <div class="status" id="kuma-status"></div>
-    </div>
-    <div id="moko" class="receiver">
-      <h3>🐏@shinajo.ed.jp</h3>
-      <div class="status" id="moko-status"></div>
-    </div>
-    <div id="piyo" class="receiver">
-      <h3>🐣@shinajo.ed.jp</h3>
-      <div class="status" id="piyo-status"></div>
-    </div>
-    <div id="waon" class="receiver">
-      <h3>🐕@shinajo.ed.jp</h3>
-      <div class="status" id="waon-status"></div>
+    <div class="selector">
+      <label>BCC:</label>
+      <select id="bcc" multiple>
+        <option value="kuma">🐻 kuma</option>
+        <option value="moko">🐏 moko</option>
+        <option value="piyo">🐣 piyo</option>
+        <option value="waon">🐕 waon</option>
+      </select>
     </div>
   </div>
 
-  <script>
-    const emojiMap = {
-      kuma: '🐻',
-      moko: '🐏',
-      piyo: '🐣',
-      waon: '🐕'
-    };
+  <label>本文:</label>
+  <textarea id="body" rows="4">あそぼう</textarea>
+  <button onclick="sendEmail()">送信</button>
+</div>
 
-    function sendEmail() {
-      const to = Array.from(document.getElementById('to').selectedOptions).map(o => o.value);
-      const cc = Array.from(document.getElementById('cc').selectedOptions).map(o => o.value);
-      const bcc = Array.from(document.getElementById('bcc').selectedOptions).map(o => o.value);
-      const body = document.getElementById('body').value;
-      const all = ['kuma', 'moko', 'piyo', 'waon'];
+<div class="container" id="receivers">
+  <div class="receiver" id="kuma">
+    <h3>🐻@shinajo.ed.jp</h3>
+    <div class="status">(メールなし)</div>
+  </div>
+  <div class="receiver" id="moko">
+    <h3>🐏@shinajo.ed.jp</h3>
+    <div class="status">(メールなし)</div>
+  </div>
+  <div class="receiver" id="piyo">
+    <h3>🐣@shinajo.ed.jp</h3>
+    <div class="status">(メールなし)</div>
+  </div>
+  <div class="receiver" id="waon">
+    <h3>🐕@shinajo.ed.jp</h3>
+    <div class="status">(メールなし)</div>
+  </div>
+</div>
 
-      all.forEach(id => {
-        const box = document.getElementById(id);
-        const status = document.getElementById(`${id}-status`);
-        let content = '';
+<script>
+const emojiMap = {
+  kuma: '🐻',
+  moko: '🐏',
+  piyo: '🐣',
+  waon: '🐕'
+};
 
-        if (to.includes(id) || cc.includes(id)) {
-          box.classList.remove('grayed');
-          content += '<strong>From:</strong> 🐈@shinajo.ed.jp<br>';
+function sendEmail() {
+  const to = Array.from(document.getElementById('to').selectedOptions).map(o => o.value);
+  const cc = Array.from(document.getElementById('cc').selectedOptions).map(o => o.value);
+  const bcc = Array.from(document.getElementById('bcc').selectedOptions).map(o => o.value);
+  const body = document.getElementById('body').value;
 
-          const visibleTo = to.map(r => `${emojiMap[r]}@shinajo.ed.jp`).join(', ');
-          const visibleCc = cc.map(r => `${emojiMap[r]}@shinajo.ed.jp`).join(', ');
+  const allReceivers = ['kuma', 'moko', 'piyo', 'waon'];
 
-          if (visibleTo) content += `<strong>To:</strong> ${visibleTo}<br>`;
-          if (visibleCc) content += `<strong>CC:</strong> ${visibleCc}<br>`;
+  allReceivers.forEach(id => {
+    const box = document.getElementById(id);
+    const status = box.querySelector('.status');
+    let content = '';
+    box.classList.add('grayed');
 
-          content += `<strong>本文:</strong><br>${body}`;
-        } else if (bcc.includes(id)) {
-          box.classList.remove('grayed');
-          content += '<strong>From:</strong> 🐈@shinajo.ed.jp<br>';
-          content += `<strong>本文:</strong><br>${body}`;
-        } else {
-          box.classList.add('grayed');
-          content = '（メールなし）';
-        }
+    const isTo = to.includes(id);
+    const isCc = cc.includes(id);
+    const isBcc = bcc.includes(id);
 
-        status.innerHTML = content;
-      });
+    if (isTo || isCc || isBcc) {
+      box.classList.remove('grayed');
+      content += `<strong>From:</strong> 🐈@shinajo.ed.jp\n`;
+      if (to.length > 0) {
+        content += `<strong>To:</strong>\n${to.map(r => `${emojiMap[r]}@shinajo.ed.jp`).join('\n')}\n`;
+      }
+      if (cc.length > 0) {
+        content += `<strong>CC:</strong>\n${cc.map(r => `${emojiMap[r]}@shinajo.ed.jp`).join('\n')}\n`;
+      }
+      content += `<strong>本文:</strong>\n${body}`;
+    } else {
+      content = '(メールなし)';
     }
-  </script>
+
+    status.innerHTML = content;
+  });
+}
+</script>
+
 </body>
 </html>
