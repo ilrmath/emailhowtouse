@@ -2,124 +2,556 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>メールの宛先・CC・BCCの動作シミュレーター</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f0f0f0; }
-    .container { display: flex; gap: 10px; flex-wrap: wrap; }
-    .form { background: #fff; padding: 20px; border-radius: 10px; width: 100%; margin-bottom: 20px; }
-    .selector-row { display: flex; gap: 20px; justify-content: space-between; flex-wrap: wrap; }
-    .selector { flex: 1; min-width: 200px; }
-    .receiver { background: #fff; padding: 10px; border-radius: 10px; flex: 1; min-width: 200px; box-sizing: border-box; }
-    .grayed { color: #aaa; background: #eee; }
-    select, textarea, button { width: 100%; margin: 10px 0; }
-    .status { margin-top: 10px; padding: 5px; border-top: 1px solid #ccc; font-size: 0.9em; white-space: pre-wrap; }
-  </style>
-</head>
-<body>
-
-<h1>送り主:🐈@shinajo.ed.jp</h1>
-
-<div class="form">
-  <div class="selector-row">
-    <div class="selector">
-      <label>宛先 (To):</label>
-      <select id="to" multiple>
-        <option value="kuma">🐻 kuma</option>
-        <option value="moko">🐏 moko</option>
-        <option value="piyo">🐣 piyo</option>
-        <option value="waon">🐕 waon</option>
-      </select>
-    </div>
-
-    <div class="selector">
-      <label>CC:</label>
-      <select id="cc" multiple>
-        <option value="kuma">🐻 kuma</option>
-        <option value="moko">🐏 moko</option>
-        <option value="piyo">🐣 piyo</option>
-        <option value="waon">🐕 waon</option>
-      </select>
-    </div>
-
-    <div class="selector">
-      <label>BCC:</label>
-      <select id="bcc" multiple>
-        <option value="kuma">🐻 kuma</option>
-        <option value="moko">🐏 moko</option>
-        <option value="piyo">🐣 piyo</option>
-        <option value="waon">🐕 waon</option>
-      </select>
-    </div>
-  </div>
-
-  <label>本文:</label>
-  <textarea id="body" rows="4">あそぼう</textarea>
-  <button onclick="sendEmail()">送信</button>
-</div>
-
-<div class="container" id="receivers">
-  <div class="receiver" id="kuma">
-    <h3>🐻@shinajo.ed.jp</h3>
-    <div class="status">(メールなし)</div>
-  </div>
-  <div class="receiver" id="moko">
-    <h3>🐏@shinajo.ed.jp</h3>
-    <div class="status">(メールなし)</div>
-  </div>
-  <div class="receiver" id="piyo">
-    <h3>🐣@shinajo.ed.jp</h3>
-    <div class="status">(メールなし)</div>
-  </div>
-  <div class="receiver" id="waon">
-    <h3>🐕@shinajo.ed.jp</h3>
-    <div class="status">(メールなし)</div>
-  </div>
-</div>
-
-<script>
-const emojiMap = {
-  kuma: '🐻',
-  moko: '🐏',
-  piyo: '🐣',
-  waon: '🐕'
-};
-
-function sendEmail() {
-  const to = Array.from(document.getElementById('to').selectedOptions).map(o => o.value);
-  const cc = Array.from(document.getElementById('cc').selectedOptions).map(o => o.value);
-  const bcc = Array.from(document.getElementById('bcc').selectedOptions).map(o => o.value);
-  const body = document.getElementById('body').value;
-
-  const allReceivers = ['kuma', 'moko', 'piyo', 'waon'];
-
-  allReceivers.forEach(id => {
-    const box = document.getElementById(id);
-    const status = box.querySelector('.status');
-    let content = '';
-    box.classList.add('grayed');
-
-    const isTo = to.includes(id);
-    const isCc = cc.includes(id);
-    const isBcc = bcc.includes(id);
-
-    if (isTo || isCc || isBcc) {
-      box.classList.remove('grayed');
-      content += `<strong>From:</strong> 🐈@shinajo.ed.jp\n`;
-      if (to.length > 0) {
-        content += `<strong>To:</strong>\n${to.map(r => `${emojiMap[r]}@shinajo.ed.jp`).join('\n')}\n`;
-      }
-      if (cc.length > 0) {
-        content += `<strong>CC:</strong>\n${cc.map(r => `${emojiMap[r]}@shinajo.ed.jp`).join('\n')}\n`;
-      }
-      content += `<strong>本文:</strong>\n${body}`;
-    } else {
-      content = '(メールなし)';
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #657189;
+      --line: #dce3ee;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --to: #eaf2ff;
+      --cc: #eefbf3;
+      --bcc: #fff5e8;
+      --shadow: 0 10px 28px rgba(23, 32, 51, 0.08);
     }
 
-    status.innerHTML = content;
-  });
-}
-</script>
+    * { box-sizing: border-box; }
 
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 32px auto 48px;
+    }
+
+    .hero {
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      line-height: 1.3;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .compose {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .compose-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .sender {
+      font-weight: 700;
+    }
+
+    .sender span {
+      color: var(--muted);
+      font-weight: 500;
+      margin-right: 8px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .recipient-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      padding: 20px 22px 8px;
+    }
+
+    fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    fieldset.to-group { background: var(--to); }
+    fieldset.cc-group { background: var(--cc); }
+    fieldset.bcc-group { background: var(--bcc); }
+
+    legend {
+      width: 100%;
+      padding: 12px 14px 8px;
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    .role-note {
+      display: block;
+      margin-top: 1px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 500;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 8px;
+      padding: 4px 12px 14px;
+    }
+
+    .person-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 11px;
+      border: 1px solid rgba(101, 113, 137, 0.2);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.78);
+      cursor: pointer;
+      transition: 0.15s ease;
+      user-select: none;
+    }
+
+    .person-check:hover {
+      transform: translateY(-1px);
+      border-color: rgba(37, 99, 235, 0.4);
+      background: #fff;
+    }
+
+    .person-check input {
+      width: 19px;
+      height: 19px;
+      margin: 0;
+      accent-color: var(--primary);
+      flex: 0 0 auto;
+    }
+
+    .person-check strong {
+      font-size: 0.95rem;
+      overflow-wrap: anywhere;
+    }
+
+    .message-area {
+      padding: 12px 22px 22px;
+    }
+
+    .message-area label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 800;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      resize: vertical;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    #selectionSummary {
+      margin-right: auto;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    button {
+      border: 0;
+      border-radius: 11px;
+      padding: 11px 22px;
+      background: var(--primary);
+      color: #fff;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(37, 99, 235, 0.2);
+    }
+
+    button:hover { background: var(--primary-dark); }
+    button:active { transform: translateY(1px); }
+
+    .results-title {
+      margin: 30px 0 12px;
+      font-size: 1.3rem;
+    }
+
+    .receiver-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .receiver {
+      min-height: 230px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .receiver.grayed {
+      opacity: 0.55;
+      box-shadow: none;
+      background: #eef1f5;
+    }
+
+    .receiver h2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0 0 13px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+      font-size: 1.05rem;
+    }
+
+    .delivery-badge {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: #e8f7ed;
+      color: #16723a;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .grayed .delivery-badge {
+      background: #dde2e9;
+      color: var(--muted);
+    }
+
+    .status {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font-size: 0.93rem;
+    }
+
+    .mail-row {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 8px;
+      margin-bottom: 7px;
+    }
+
+    .mail-label {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .mail-body {
+      margin-top: 13px;
+      padding: 12px 13px;
+      border-radius: 10px;
+      background: #f7f9fc;
+      border-left: 4px solid var(--primary);
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      min-height: 130px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 820px) {
+      .recipient-grid, .receiver-grid { grid-template-columns: 1fr; }
+      .compose-header { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (max-width: 520px) {
+      .page { width: min(100% - 18px, 1180px); margin-top: 16px; }
+      .recipient-grid, .message-area { padding-left: 14px; padding-right: 14px; }
+      .actions { align-items: stretch; flex-direction: column; }
+      #selectionSummary { margin-right: 0; }
+      button { width: 100%; }
+    }
+
+
+    /* 1画面表示向けのコンパクトレイアウト */
+    @media (min-width: 1051px) {
+      html, body { height: 100%; }
+      body { overflow: hidden; line-height: 1.35; }
+      .page {
+        width: min(1380px, calc(100% - 24px));
+        height: 100vh;
+        margin: 0 auto;
+        padding: 8px 0;
+        display: grid;
+        grid-template-rows: auto auto auto minmax(0, 1fr);
+        gap: 6px;
+      }
+      .hero { margin: 0; display: flex; align-items: baseline; gap: 14px; }
+      h1 { margin: 0; font-size: clamp(1.18rem, 1.7vw, 1.65rem); white-space: nowrap; }
+      .subtitle { font-size: .8rem; }
+      .compose-header { padding: 7px 13px; }
+      .recipient-grid { gap: 9px; padding: 8px 13px 4px; }
+      legend { padding: 6px 9px 3px; font-size: .9rem; }
+      .role-note { font-size: .66rem; }
+      .check-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+        padding: 2px 7px 7px;
+      }
+      .person-check { gap: 6px; padding: 4px 6px; }
+      .person-check input { width: 15px; height: 15px; }
+      .person-check strong { font-size: .78rem; }
+      .message-area { padding: 3px 13px 8px; }
+      .message-area label { margin-bottom: 2px; font-size: .84rem; }
+      textarea { min-height: 44px; height: 44px; resize: none; padding: 6px 9px; }
+      .actions { margin-top: 4px; }
+      button { padding: 6px 17px; }
+      .results-title { margin: 0; font-size: 1rem; }
+      .receiver-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 9px;
+        min-height: 0;
+      }
+      .receiver {
+        min-height: 0;
+        height: 100%;
+        padding: 9px;
+        overflow: auto;
+      }
+      .receiver h2 { margin-bottom: 6px; padding-bottom: 5px; font-size: .86rem; }
+      .status { font-size: .76rem; }
+      .mail-row { grid-template-columns: 40px 1fr; gap: 4px; margin-bottom: 3px; }
+      .mail-body { margin-top: 6px; padding: 6px 8px; }
+      .empty { min-height: 60px; }
+    }
+
+    @media (min-width: 1051px) and (max-height: 760px) {
+      .page { padding: 4px 0; gap: 4px; }
+      h1 { font-size: 1.08rem; }
+      .subtitle, .hint { font-size: .66rem; }
+      .compose-header { padding: 4px 11px; }
+      .recipient-grid { padding: 5px 11px 2px; }
+      legend { padding-top: 4px; }
+      .person-check { padding: 2px 5px; }
+      .message-area { padding: 2px 11px 5px; }
+      textarea { height: 34px; min-height: 34px; }
+      .actions { margin-top: 2px; }
+      button { padding: 4px 14px; }
+      .receiver { padding: 6px; }
+      .receiver h2 { margin-bottom: 4px; padding-bottom: 4px; }
+      .mail-body { margin-top: 4px; padding: 4px 6px; }
+    }
+  </style>
+<script type="text/javascript" nonce="352a09d0baa4412e8fd1f1e4b42" src="//local.adguard.org?ts=1781680211987&amp;type=content-script&amp;dmn=chatgpt.com&amp;url=https%3A%2F%2Fchatgpt.com%2Fbackend-api%2Festuary%2Fcontent%3Fid%3Dfile_00000000dd6871fd9640dc01aaf2f77c%26ts%3D494913%26p%3Dfs%26cid%3D1%26sig%3D1b61f6fc2ddb1105fd317cfa8828d130987ac404fca9c9e5608f818b1c4d0b91%26v%3D0&amp;app=com.microsoft.edgemac&amp;css=2&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=0&amp;stealth=1&amp;st-push&amp;st-loc&amp;st-java&amp;st-dnt"></script><script type="text/javascript" nonce="352a09d0baa4412e8fd1f1e4b42" src="//local.adguard.org?ts=1781680211987&amp;name=AdGuard%20Extra&amp;type=user-script"></script></head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <h1>メールの宛先・CC・BCCの動作シミュレーター</h1>
+      <p class="subtitle">それぞれの受信者に、どの情報が見えるかを確認できます。</p>
+    </header>
+
+    <section class="compose" aria-label="メール作成">
+      <div class="compose-header">
+        <div class="sender"><span>送り主</span>🐈@shinajo.ed.jp</div>
+        <div class="hint">同じ相手は To・CC・BCC のいずれか1つだけ選べます。</div>
+      </div>
+
+      <div class="recipient-grid">
+        <fieldset class="to-group">
+          <legend>宛先（To）<span class="role-note">主にメールを読んで対応する人</span></legend>
+          <div class="check-list" data-group="to"></div>
+        </fieldset>
+
+        <fieldset class="cc-group">
+          <legend>CC<span class="role-note">内容を共有しておきたい人</span></legend>
+          <div class="check-list" data-group="cc"></div>
+        </fieldset>
+
+        <fieldset class="bcc-group">
+          <legend>BCC<span class="role-note">ほかの受信者には名前を隠して送る人</span></legend>
+          <div class="check-list" data-group="bcc"></div>
+        </fieldset>
+      </div>
+
+      <div class="message-area">
+        <label for="body">本文</label>
+        <textarea id="body" rows="5">あそぼう</textarea>
+        <div class="actions">
+          <div id="selectionSummary">受信者はまだ選択されていません。</div>
+          <button type="button" id="sendButton">送信</button>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="results-title">各受信者に見えるメール</h2>
+    <section class="receiver-grid" id="receivers" aria-live="polite"></section>
+  </main>
+
+  <script>
+    const people = [
+      { id: 'kuma', emoji: '🐻', name: 'kuma' },
+      { id: 'moko', emoji: '🐏', name: 'moko' },
+      { id: 'piyo', emoji: '🐣', name: 'piyo' },
+      { id: 'waon', emoji: '🐕', name: 'waon' }
+    ];
+
+    const groups = ['to', 'cc', 'bcc'];
+
+    function addressOf(person) {
+      return `${person.emoji}@shinajo.ed.jp`;
+    }
+
+    function renderCheckboxes() {
+      groups.forEach(group => {
+        const list = document.querySelector(`[data-group="${group}"]`);
+        people.forEach(person => {
+          const label = document.createElement('label');
+          label.className = 'person-check';
+          label.innerHTML = `
+            <input type="checkbox" name="${group}" value="${person.id}">
+            <strong>${addressOf(person)}</strong>
+          `;
+          list.appendChild(label);
+        });
+      });
+    }
+
+    function renderReceivers() {
+      const container = document.getElementById('receivers');
+      people.forEach(person => {
+        const receiver = document.createElement('article');
+        receiver.className = 'receiver grayed';
+        receiver.id = `receiver-${person.id}`;
+        receiver.innerHTML = `
+          <h2>
+            <span>${addressOf(person)}</span>
+            <span class="delivery-badge">メールなし</span>
+          </h2>
+          <div class="status empty">まだメールは届いていません。</div>
+        `;
+        container.appendChild(receiver);
+      });
+    }
+
+    function selectedIds(group) {
+      return Array.from(document.querySelectorAll(`input[name="${group}"]:checked`))
+        .map(input => input.value);
+    }
+
+    function updateSelectionSummary() {
+      const count = new Set(groups.flatMap(selectedIds)).size;
+      document.getElementById('selectionSummary').textContent = count
+        ? `受信者を ${count} 人選択中です。`
+        : '受信者はまだ選択されていません。';
+    }
+
+    function handleExclusiveSelection(event) {
+      const changed = event.target;
+      if (!changed.matches('input[type="checkbox"]') || !changed.checked) return;
+
+      groups.forEach(group => {
+        if (group !== changed.name) {
+          const duplicate = document.querySelector(`input[name="${group}"][value="${changed.value}"]`);
+          if (duplicate) duplicate.checked = false;
+        }
+      });
+      updateSelectionSummary();
+    }
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>'"]/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      })[char]);
+    }
+
+    function formatAddresses(ids) {
+      return ids.map(id => addressOf(people.find(person => person.id === id))).join('<br>');
+    }
+
+    function mailRow(label, value) {
+      return `<div class="mail-row"><div class="mail-label">${label}</div><div>${value}</div></div>`;
+    }
+
+    function sendEmail() {
+      const to = selectedIds('to');
+      const cc = selectedIds('cc');
+      const bcc = selectedIds('bcc');
+      const body = document.getElementById('body').value;
+      const recipients = new Set([...to, ...cc, ...bcc]);
+
+      people.forEach(person => {
+        const receiver = document.getElementById(`receiver-${person.id}`);
+        const badge = receiver.querySelector('.delivery-badge');
+        const status = receiver.querySelector('.status');
+
+        if (!recipients.has(person.id)) {
+          receiver.classList.add('grayed');
+          badge.textContent = 'メールなし';
+          status.className = 'status empty';
+          status.textContent = 'この人にはメールが届きません。';
+          return;
+        }
+
+        receiver.classList.remove('grayed');
+        badge.textContent = bcc.includes(person.id) ? 'BCCで受信' : '受信';
+        status.className = 'status';
+
+        let content = mailRow('From', '🐈@shinajo.ed.jp');
+        if (to.length) content += mailRow('To', formatAddresses(to));
+        if (cc.length) content += mailRow('CC', formatAddresses(cc));
+        content += `<div class="mail-body"><strong>本文</strong><br>${escapeHtml(body).replace(/\n/g, '<br>')}</div>`;
+        status.innerHTML = content;
+      });
+    }
+
+    renderCheckboxes();
+    renderReceivers();
+
+    document.querySelector('.recipient-grid').addEventListener('change', event => {
+      handleExclusiveSelection(event);
+      updateSelectionSummary();
+    });
+    document.getElementById('sendButton').addEventListener('click', sendEmail);
+  </script>
 </body>
 </html>
