@@ -49,6 +49,20 @@
       color: var(--muted);
     }
 
+    .hero-reset {
+      flex: 0 0 auto;
+      padding: 6px 15px;
+      border-radius: 10px;
+      background: #dc2626;
+      box-shadow: 0 5px 12px rgba(220, 38, 38, 0.24);
+      font-size: 0.9rem;
+      line-height: 1.2;
+    }
+
+    .hero-reset:hover {
+      background: #b91c1c;
+    }
+
     .compose {
       background: var(--card);
       border: 1px solid var(--line);
@@ -287,7 +301,7 @@
 
     .mail-row {
       display: grid;
-      grid-template-columns: 54px 1fr;
+      grid-template-columns: max-content minmax(0, 1fr);
       gap: 8px;
       margin-bottom: 7px;
     }
@@ -295,6 +309,7 @@
     .mail-label {
       color: var(--muted);
       font-weight: 800;
+      white-space: nowrap;
     }
 
     .mail-body {
@@ -320,6 +335,8 @@
 
     @media (max-width: 520px) {
       .page { width: min(100% - 18px, 1180px); margin-top: 16px; }
+      .hero { flex-wrap: wrap; }
+      .hero-reset { padding: 7px 14px; }
       .recipient-grid, .message-area { padding-left: 14px; padding-right: 14px; }
       .actions { align-items: stretch; flex-direction: column; }
       #selectionSummary { margin-right: 0; }
@@ -343,6 +360,7 @@
       .hero { margin: 0; display: flex; align-items: baseline; gap: 14px; }
       h1 { margin: 0; font-size: clamp(1.18rem, 1.7vw, 1.65rem); white-space: nowrap; }
       .subtitle { font-size: .8rem; }
+      .hero-reset { padding: 5px 13px; font-size: .78rem; }
       .compose-header { padding: 7px 13px; }
       .recipient-grid { gap: 9px; padding: 8px 13px 4px; }
       legend { padding: 6px 9px 3px; font-size: .9rem; }
@@ -374,7 +392,7 @@
       }
       .receiver h2 { margin-bottom: 6px; padding-bottom: 5px; font-size: .86rem; }
       .status { font-size: .76rem; }
-      .mail-row { grid-template-columns: 40px 1fr; gap: 4px; margin-bottom: 3px; }
+      .mail-row { grid-template-columns: max-content minmax(0, 1fr); gap: 6px; margin-bottom: 3px; }
       .mail-body { margin-top: 6px; padding: 6px 8px; }
       .empty { min-height: 60px; }
     }
@@ -383,6 +401,7 @@
       .page { padding: 4px 0; gap: 4px; }
       h1 { font-size: 1.08rem; }
       .subtitle, .hint { font-size: .66rem; }
+      .hero-reset { padding: 4px 11px; font-size: .7rem; }
       .compose-header { padding: 4px 11px; }
       .recipient-grid { padding: 5px 11px 2px; }
       legend { padding-top: 4px; }
@@ -395,6 +414,59 @@
       .receiver h2 { margin-bottom: 4px; padding-bottom: 4px; }
       .mail-body { margin-top: 4px; padding: 4px 6px; }
     }
+
+    @keyframes softPulse {
+      0%, 100% {
+        transform: scale(1);
+        filter: brightness(1.04);
+        box-shadow:
+          0 6px 14px rgba(37, 99, 235, 0.20),
+          0 0 14px 5px rgba(255, 220, 70, 0.72),
+          0 0 28px 10px rgba(255, 235, 120, 0.38);
+      }
+      50% {
+        transform: scale(1.045);
+        filter: brightness(1.14);
+        box-shadow:
+          0 8px 22px rgba(37, 99, 235, 0.28),
+          0 0 22px 9px rgba(255, 220, 70, 0.95),
+          0 0 42px 16px rgba(255, 235, 120, 0.58);
+      }
+    }
+
+    .soft-pulse {
+      animation: softPulse 2.6s ease-in-out infinite;
+    }
+
+    .hero-reset.soft-pulse {
+      animation-name: softPulseReset;
+    }
+
+    @keyframes softPulseReset {
+      0%, 100% {
+        transform: scale(1);
+        filter: brightness(1.04);
+        box-shadow:
+          0 5px 12px rgba(220, 38, 38, 0.24),
+          0 0 14px 5px rgba(255, 220, 70, 0.72),
+          0 0 28px 10px rgba(255, 235, 120, 0.38);
+      }
+      50% {
+        transform: scale(1.045);
+        filter: brightness(1.14);
+        box-shadow:
+          0 8px 22px rgba(220, 38, 38, 0.30),
+          0 0 22px 9px rgba(255, 220, 70, 0.95),
+          0 0 42px 16px rgba(255, 235, 120, 0.58);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .soft-pulse {
+        animation: none;
+      }
+    }
+
   </style>
 <style type="text/css" nonce="352a09d0baa4412e8fd1f1e4b42">.ad-slot-234-60, .publisher_ad, .banner-ad-inner, .divider-taboola, .ad-transition, #cookie_consent_container, #Adv8, #Adv9, .gb_area_ads, .msgad, .follower-ad-bottom, .adsense-header, div[data-clickadilla-banner], .hotel-ad, .jw-ad-label, .lj-like-item, .cookies-modal, #intro_ad_1, #ad-mid-rect, .a-icon-share-pinterest, #ad-base, #homepage_top_ads, #left_ads, #left_adv, .Sailthru_Subscribe, .ad-vertical, #taboola-below-article-thumbnails-mg, #eucookienotice, #leaderAdContainer, .js-ad_iframe, .grey-ad-notice, #infos_cookie, .doubleClickAd, .navbar-header-ad, #advertising_wrapper, .etn-ad-text, #adsDisplay, #AdSpaceLeaderboard, #adspace_header, .adz-horiz, #inArticleAdv, .ac_adbox, .ad-hoverable, .buySellAdsContainer, #taboola-below-article-thumbnails-v2, .ad-box-auto, .resp-sharing-button, .rekl_left, .guide__row--fixed-ad, .masthead__ad, .primis-player__container, #close-fixedban, .sets-cookie, .social_knopki, .ad400x40, .socialList-type03, #advertisement-300x250, html > div[class][style^="pointer-events: none; position: absolute; top: 0px; left: 0px; width:"], .header-sponsor, .adsdiv, .footer__ads--content, .adsImages, .adblk, .ipsShareButton, .ads-rectangle, .adbot, #ads-leaderboard, #mid_left_ads, #colAd, a[href^="https://s.cant3am.com/"], .share-general, .adsenvelope, .remove-spots, #barraaceptacion, .visibleAd, .ads-bottom, .billboard-ad, .adbtn, .adbug, .SideWidget__ad, #cookie-policy-notice, #ad__billboard, .cookie-compliance-container, #adATF300x250, .sponsor-right, #headeradspace, .ad_partners, #adBannerSpacer, .buttonAd, .ads_inline_640, #fixedban, #CookieQBanner, #share_post, .single-ads-section, .ad120_600, .adslink, .adsbox--masthead, a[href^="https://torguard.net/aff.php"] > img, #adverts_post_content, .fb_like_contain, #ad_adsense, #pvadscontainer, .adbannerright, .share-bar-desktop, #skyads, .floated-ad, .dfp-fixedbar, .adamazon, .wp-share, #lb-ad, .adRowTopWrapper, [href^="http://clicks.totemcash.com/"], .widget_FacebookLikeBox, #sidebar_adblock, .ad_fullwidth, #sideSponsors, .dianomiScriptContainer, .cookie-agreement-wrapper, .square_ad, .ads-top-main, .ad.element, #before-footer-ad, #leader-board-ad, #ad-story-top, guj-ad, .header-adcode, #persistent-share, .ad300shows, #sticky_sharing, .sponsor-block, .SkyAdContainer, .middle-footer-ad, .ad-module, .adcolumn_wrapper, a[href^="https://a.bestcontentfood.top/"], .adcon, #ad-rectangle, .adsens, #popup_ad_wrapper, .glue-cookie-notification-bar, .container_publicidad, #adblock1, #adblock2, #adblock4, .advertismentContent, .billboard.ad, .ad-slot-article, #advert-leaderboard, #Adv10, #Adv11, .ad_w300h450, #cookie-terms, #ad-block-aa, #slider-ad, .sraAdvert, .grid-item-ad, .ad_reminder, #adwidget1, #adwidget2, .sticky-sidebar-ad, .verticalAd, .buttonad, #adsense468, .dpsp-email-save-this-tool, .leaderboardadtop, .brn-ads-sticky-wrapper, #rm-adslot-contentad_1, #mnd-cookie-bar, .ad_wrapper_top, .cookie_content, .social-links-wrapper, #adOuter, a[href^="https://bngprm.com/"], #trd-exitintentbox, #cookie1, .instream_ad, #homepage-header-ad, #articleBoard-ad, .dfp-wrapper, .ads-post, #adSlot-leaderBottom, .infocookies, #adwallpaper, .advertise-top, #main_content_ad, #featureAds, .advertBottom, #adverts_right, #subheaderAd, .js-ads-carousel, .ad_grid, #adverticum_r_above, .ads250-250, #footer_cookies, [title="Share on Reddit"], .addiv, #left-ad, .adsection_a2, .ad-wrapper-with-text, .consent-cookie, .adsection_c2, .adsection_c3, #cookie-statement, #cookieMonsterWrapper, #notificacio-cookies, .ad-bottom-right-container, .js-cookieMessage, #bm-HeaderAd, .spons-link, .adds2, #hpAdVideo, .wp_bannerize, .rightboxads, .mar-leaderboard--bottom, .outbrain-wrapper-container, .ad-slot-replies, .tncls_ad, #cerekKullanimUyari, .sidebar_ad_container, .adHeading, .verticalad, .innerAdWrapper, .top-sidebar-adbox, .ad_plus, #ctrlHeader_divCookieText, #ads_space_header, .insticator-ads, #itv-glob-cookie-policy, #cookieMsgWrapper, .ad--desktop, .dartad, #bottomAdSection, .adSection, .van_vid_carousel, .vertbars, .box-lgpd, .spon_link, .widget_adsensewidget, .apiAds, .fig-ad-content, .addthis_default_style, a[href^="https://pb-track.com/"], .tp_ads, .header-top-ad, #cookie-policy-strap, .pmc-adm-boomerang-pub-div, .top-ad-bloc, .flex-posts-ads, #bottom-adhesion, .squareads { display: none!important; }
 .footer-floating-ad, #cookieParisien, #narrow-ad, #adplacement, #tv2cookiebar, .MiddleAd, button[aria-label="Share on Twitter"], #CookieMessaging, .annonstext, #bt-ad-header, .middle_AD, .GoogleDoubleClick-SponsorText, #box_cookie_info, #GlobalCookieBanner, .ad-rectangle-banner, .pix_adzone, #inline-ad-label, .sponserLink, .m-cookie-notice, .adsgrd, #blox-top-promo, .top-ad-horizontal, #lb-sponsor-left, .mid_banner_ad, #home_ads_vert, .head-top-ads, .hyperAd, #tto-cookieMessage, .mobile-ad-placeholder, .listing-page-ad, #site_content_ad_div, .taboola-widget, .banner728x90, #ads_box_top, .ad-disclaimer-text, #ads_container, .pageGoogleAds, .cookieTooltip:not(body):not(html), .adholder-300, #share_pinterest, #ad_island, .ads-336x280, #article-island-ad, #social_bookmarks, .ad_text_link, .adbox-wrapper, #topAdsContainer, #alerte_tracking, .ads.cell, #site-cookie-policy, #preroll_ads, .first-banner-ad, .adfix, .medium-rectangle-ad, #left_block_ads, #dfp_ad_mpu, .paneladvert, .widget_sej_sidebar_ad, .advert-autosize, .ad-background-container, a[href^="https://join.sexworld3d.com/track/"], #rotating_ad, .middle_ad, .adfrp, .contentleftad, .cookies-note, .ad-feature-content, #socialnets, #adsense728, .bandeauCookie, .ad-priority, .adsenbox, .dsk-box-ad-d, .placeholderAd, .asideAd, .ad160_blk, .ad-aligncenter, #innerpage-ad, #outbrain1, .ads_foot, .adinner, [data-cl-spot-id], .cookies-notice:not(body):not(html), .gnt_rr_xst, #DFP_top_leaderboard, .entry_ad, .gameAd, .rect-ad, #AD_ROW, .ad_728x90b, #sidebar-main-ad, .rs_ad_block, #adHome, .adside, .cookieAccepterSlider, #ws_eu-cookie-container, .textadtext, .adwhitespace, .ad_cls_fix, .mpu_Ad, .zergnet__container, .adlinks, .blocCookie, .right_ad_box, .tile-ad-container, .banner-buysellads, .TopBannerstyled__Wrapper-sc-x2ypns-0, .ad-container--hot-video, .google-news-button, #wide_right_ad, .topAdBar, #eucookielaw, #leaderboardAdTop, #top_mpu_ad, .container-cookie-notice, #side_ads, .cookiesWarning-container, .ad-wrapper-bg, #cookieMessageDisplayDIV, .leaderboard_ad_container, #large-ads, #ad_site_header, .sagreklam, div[id^="blz_rss_"], .block_ad303x1000_right, .top-ads-mobile, .pt_ad03, #global_header_ad, #ad-300-250, #HeroAd, .box-adsense-top, .widget_facebook_likebox, .taboola-sidebar, #afc-container, #koddostu-face8, .advt_single, .advertiseHere, #cookie_panel, .ad_post, #Footer_cookieLawBox, .chapter-bottom-ads, #bsa_add_holder_g, .c-adDisplay_container, .woodmart-cookies-popup, .bottom-ad2, .ads_outer, .sharing-item, #bandeau_cookies, #ccm-cookiesDisclosure, #outbrain-section, .ad728x90-1, .ad728x90-2, .bottom-ads, .bottom-adv, .dart-advertisement, .tc_ad_unit, .header_advert, .square-sidebar-ad, .main_ad, .storyad300, .contentads1, .contentads2, .SponsoredContent, .str-top-ad, .skyAdd, #dfpad-0, .ad250x250, .PrintAd-Slider, .m-cookiepolicy, #takeover_ad, #top_ads_wrap, .mediumRectAdWrapper, #div_advt_right, .cookiePanel, .mpu_ad, a[href^="https://prf.hn/click/"][href*="/camref:"] > img, .advertisement-content, .js-no-sticky-ad, .adsload, .adsPlaceHolder, .block-google-admanager, #lower-ad-banner, .cookie-consent-holder, #adzone-middle1, #adzone-middle2, #article_ads, #banner_pos1_ddb_0, div[class^="index-module_openwebAd_"], #adxBigAd, .adsnippet_widget, .incontentAd, #rotatingads, .sponsorText, .gadsense-ad, .tower_ad, .mvp_facebook_widget, .galleryRightAd, .ad-container-header, .cwAdvert, .ad-shifted, embed[width="600"][height="160"], .__isboostReturnAd, #ad_rr_1, .cbd_ad_manager, .ads_rectangle, #cookierBayer, #towerad, .CookieMessage, .widget_text_adsense, .module-ads, .ad250x300, #fink_icon_paylas, .gallery_ads_box, #mid_ad_div, a[href*=".g2afse.com/"], .singpagead, .duyuru_kutusu, .inline-ad-text, .widget-ad300x250, .fwAdTags, #gpt-ad-skyscraper, .ads-widget-content, .post-load-ad, a[onclick*="https://www.facebook.com/sharer/"], #adheader, .banner728-container, .ad-panel-wrap, #bannerad2, #footer-advert, #medrectad, .ad170x30, #AdDisclaimer, #ad_article1_1, #ad_article1_2, .gutterads, #ad-horizontal-top, a[href^="https://combodef.com/"], .ad__inline, .ad_large, .adsense-heading, .ad-wrap-transparent, .ContentTopAd, #adPlacement_1, #adPlacement_2, #adPlacement_3, #adPlacement_4, #adPlacement_8, #adPlacement_9, #adPlacement_7, #ad_creative_2 { display: none!important; }
@@ -475,12 +547,13 @@ a[href^=" http://www.reddit.com/submit"], .social-menu, #fb-root:not(body):not(h
 iframe[id][height^="  "] { visibility: hidden !important; }
 #container-ad, a[href^="//reddit.com/submit?url="], a.odkl-klass, #ad_global_above_footer, a[href^="https://facebook.com/sharer/sharer.php?"], #ad_1, #ad_2, #ad_3, #ad_4, div[id] > div#gCloseButton, .share_article, #ads1, .cookieBanner:not(body), .share-block, #ads-right, a[href^="https://www.ok.ru/dk?st.cmd=addShare"], .AdSense, .banner_ad_wrapper, .social_google, .share_buttons, .cookiepolicy, .body-top-ads, .share-btn, #ad_top, .ADFooter, a.odkl-klass-s, a[href*="//b.hatena.ne.jp/append?"], .cookie-header, #gdpr-banner, .et_social_pinterest, div[class^="app_gdpr"], .shareholder, .js-cookie-bar, a[href^="https://www.facebook.com/sharer/sharer.php"], #SinoptikInformer, a[href^="//x.com/share"], .top-banner-ad, iframe[src^="https://widget.civey.com"], .adCreative, .single-ads, .view_ad, #cookieNotification, .featuredAds, #cookieBar, #adbar, a[href^="http://www.friendfeed.com/share?"], .panel_cookie, .adResult, #ads_content, #cookieBox, #adbox, #adsContainer, div[data-adunit], #cookie-note, #sharer, .cookie-container, .social-share, .cookie-notice-wrapper, a[href^="//www.reddit.com/submit"], .adthrive-content, .cookies-dialog, .full_AD, #acceptCookie, .ad_overlay, #mplayer-embed, a[href^="https://service.weibo.com/share/share.php"], .googleAdsense, #cookies-notice, a[href^="https://www.facebook.com/sharer.php"], .is-ad, iframe[width="728"][height="90"], .fb-like, .cookie-block, .ads-title, .social-bar, .social_share, .cookie-consent-banner, .adcenter, .ad_middle, a[href^="https://www.pinterest.com/pin/create/link/"], a[href^="//plus.google.com/share"], #smartbanner.ios, [onclick^="window.open('https://connect.ok.ru/offer?url="], .AD_area, .AdBox7, .box-cookies, .optanon-alert-box-wrapper, .line-it-button, #idxrcookies, .top-share, .ad-placeholder:not(#filter_ads_by_classname):not(#detect_ad_empire):not(#detect):not(.adsbox), .has-ad, .social_buttons, .cookie-layer, .ligatus, .ads-border, .share-top, .adholder2, .ad-contain, .google-ad, .socialmedia, .hatena-bookmark-button-frame, .mailpoet_form, a[href^="//www.facebook.com/sharer.php?"], .node-ad, div[id^="ezoic-pub-ad-"], .sidead, .ad_btn, .advertSlider, .google-buzz-button, .anyClipWrapper, .cookie-check, .ad_div, .ad-area:not(.text-ad), .vertical-ads, #vkshare0, .ad-content-area, .ad-content, .ad-outside, #adWrap, #ad_middle, a[href^="https://share.yandex.ru/go.xml?service="], .cardAd, #ad-target, #leaderboard-ad, a[href^="http://www.facebook.com/dialog/feed?"], .connatix-wrapper, .cookie-confirm, #socialIcons, .ck-banner, #adtop, a.mrc__plugin_recommendations, ins[style$="height:    90px; width:    728px;"], a[href^="https://ru.reddit.com/submit"], [onclick^="window.open('https://www.facebook.com/share.php?"], #leaderboard.ad, .m_cookie, a[href^="https://www.stumbleupon.com/submit?url="], .article-share, #sidebar_ad_1, .ad_img, .social-widget, a[href^="http://service.weibo.com/share/share.php"], .adsBanner, .page-wrap--cookie-permission, a[href^="http://facebook.com/share.php?"], #cookieInfo, .share-button, .f-ad, #google-ad, #cookies-overlay, .adhead, .sticky-footer-ad, #cliSettingsPopup, div[style^="width:    160px; height:    600px; margin: 0px auto; min-width: 160px; min-height: 600px;"], #app-follow-banner, .cookiebox, .advert_area, #cmp-app-container, .cli-popupbar-overlay, iframe[width="200"][height="240"], .socialbutton:not(.dropdown-menu.pull-right), #cookiescript_injected, .ad_frame, .ADInfo, .cookies-info:not(html):not(body), ins.adsbygoogle[data-ad-client], .social-sidebar, .Ad-Container:not(.adsbygoogle), a[href^="https://feedly.com/i/subscription/"], .adhide, .sidebar-ads, .cc-window[aria-label="cookieconsent"], .adsbyvli, #adBanner1, .cookies-container, a[href^="http://share.yandex.ru/go.xml?service="], .fa-pinterest-square, .video-share, [id^="div-gpt-ad"], #fb_groups, #Adbanner, .ads_wrapper, .sponsor_post, .wrapper-ad, .content_ads, #bottom_ads, .cookie-notice:not(body):not(html), #cookie_banner, #adsense-bottom, #showads, .cookieconsent:not(body):not(html), a[href^="https://natour.naughtyamerica.com/track/"], .ad_top, #cookiebar, #redim-cookiehint:not(body):not(html), #footer-banner, .ad-center, .c-ads, .sns-group, .ad-holder, .chitika-ad, [onclick^="window.open('http://www.facebook.com/share.php?"], #cookiediv, .ads-ad, #flickr_badge_uber_wrapper, .banner-728x90, .cookie-notice-container, .ad-heading, .ad-section, .native-ad, .ad-stickyhero-enable-mobile, .shareContent, .after-post-ad, a[href^="http://metrika.yandex.ru/stat/"], #SponsoredLinks, .ad-sp, iframe[width="468"][height="60"], .advert1, .advert2, .adverts, #cookie-consent, #cookienotice, .ads300, .adace-slot, .ad-enabled, .ads-box, #cookie-alert, #adcontainer, a.mrc__plugin_share_friends, .cookie-policy-message, amp-img[width="   336"], #cookiebar-container, .ad300, .ad336, #cookieFooter, #cookie_policy, .ads-header, [href^="https://www.herbanomic.com/"] > img, .ad_widget, #googleAds, #cookielaw, a[onclick^="window.open('//getpocket.com/edit?url="], a[href^="//vk.com/share.php"], a[href^="//www.livejournal.com/update.bml"], [data-ad-module], .ad-caption, .ez-video-wrap, #didomi-notice, #adlabel { display: none!important; }
 #cookiewarning, .adwidget, #banner-ad, #vk_groups, .ads970, .adzone, .advert-block, a[href^="https://metrika.yandex.ru/stat/"], .entry-share, .outer_ad_container, a[href*="//getpocket.com/edit?"], ins[id][style*="--gn-ov-ad-height"], .sponsorad, .adscenter, #ad_block, .btn_share, .cookie-opt-in, :not(.sharingOptionsGroup) > .share-menu, a[onclick^="bandapp://create/post"], #cookie-law-info-bar, .rightAd, .fb-page, div[id^="crt-"][style], #cookieContainer, #AdHeader, .popup-cookie, .adslot_1, .adslot_2, .tnt-dmp-reactive, .adv-banner, #privacypolicy, .ad-zone-container, #adsbox, .AdUnit, [class^="s2nPlayer"], .social_networks, .ad-grid, #horizontal-ad, div[data-ad-targeting], [href^="https://mystore.com/"] > img, .master-post-advert, .IN-widget, .ad-current, a[href="http://www.addtoany.com/share_save"], .mainAd, .socialBar, .cookie-consent-content, #adv-text, .odkl-share-oc, .advertiser, .adWrap, a[href^="http://www.google.com/bookmarks/mark?"], .cookie-notification:not(body), a[title="Share on Facebook"], #cookieAlert, #scroll_ad, #cookie-message, [name^="google_ads_iframe"], .ad-post, .socialContainer, .share__link, .cookie-notify:not(body):not(html), .cookie_consent:not(body):not(html), .ads-row, .ezo_ad, .linkedin-share, a[href^="http://www.myspace.com/Modules/PostTo/Pages/?u="], a[href^="https://vk.com/share.php"], #accept_cookie, .sns-share, .header-ad-row, .single_ad, #ad-wrap2, .cookie-permission-container, .share-icon, .ads-top, .adBox, .video-ad-container, .cookies-overlay, .lgcookieslaw_banner, .p-ad, a[name="fb_share"], .share-page, a[href^="http://del.icio.us/post?url="], .adrect, .adDiv, #cookie-banner, .cookie-wrapper, .googleAd, #AD_160, .cc-floating, a[onclick^="window.open ('http://www.facebook.com/sharer.php"], #ad-ads, .googlead, #vk_group, .ads-loaded, .ads--square, .cookieWarning, div[style^="height:    250px; width:    300px;"], .cc_container, #ads-header, #ad-box, [title="Compartir en Facebook"], a[href^="https://www.odnoklassniki.ru/dk?st.cmd=addShare"], .ad-200x200, #topAd, .page-social, #mc_embed_signup, .googleads, .adImg, div[data-cy="cookie-banner"], .c-cookie, div[id^="img_"][style^="margin:0;padding:0;display:block;position:fixed;left:0;"], a[onclick^="window.open('https://www.linkedin.com/shareArticle?"], #tarteaucitronAlertBig, .product-ad, #adlayer, .cookie-overlay:not(html):not(body), #odklocs0, #odklocs1, #videoAd, [href^="http://mypillow.com/"] > img, .socialLinks, .adunit-container, a[href^="https://pubads.g.doubleclick.net/"], a[href^="https://www.linkedin.com/shareArticle"], #cookie-content, .wps-player-wrap, #sidebar_ads, .ad-head, img[width="240"][height="400"], a[href^="http://feedly.com/i/subscription/"], .ad-hero, a[href^="https://www.facebook.com/dialog/send"], .adHolder, .as-oil, .ad-widget, #ad_container, .CookieBar:not(body), #social_share, .adContent, .sponsoredItem, .ads-box-border, .small_ad, a[href^="http://linkedin.com/shareArticle?"], .facebook-like, .adMiddle, a[href^="https://x.com/share"], .ad-hint, #cookie-consent-banner, .adRow, .ad-med-rec, a[href*="//b.hatena.ne.jp/add?"], a[href^="https://x.com/home?"], .cookieConsentContainer, #social-media, .smallads, .blogAd, #prerollAd, #cookie-consent-popup, a[href^="http://www.liveinternet.ru/stat/"], .block-simpleads, #adTower, a[href^="http://www.livejournal.com/update.bml"], [onclick^="window.open('https://vk.com/share.php"], .c-cookie-banner, a[href^="http://click.dtiserv2.com/"], a[href^="https://connect.ok.ru/dk?st.cmd=WidgetSharePreview"], ins.adsbygoogle[data-ad-slot], a[href^="https://twitter.com/home?"], a[href^="https://kooapp.com/create?title="], .ad-click, .social_twitter, .wrapper_ad, a[href^="https://vkontakte.ru/share.php"], .google_ads, .socialite, #ad-top, .share__button, #ad-slot, #inner-top-ads, #advert-1, a[href^="https://adclick.g.doubleclick.net/"], .ads-banner, .advert_list, [href^="https://www.mypillow.com/"] > img, #js-cookie-notice, .contentAds, .advertisement-block, a[href^="https://ok.ru/dk?st.cmd=addShare"], a[href^="whatsapp://send"], a[href^="https://twitter.com/share"], .cookiesMessage, .vk_share_button, a[href^="https://connect.ok.ru/offer?url="], .ya-share2, a[href^="https://facebook.com/sharer.php?"], .tile-ad, #cookieConsentBar, .cookieConsentBanner, #cookieWarning, .postad, .btn_fb, #vk_share, .cookieNotice:not(body):not(html), div[id^="dfp-ad-"], .cookieContainer, .adsleft, .ad-padding, .ad_bg, .rodo-overlay:not(body):not(html), a[href^="http://vkontakte.ru/share.php"], .ad-notice, .CookieNotice:not(body):not(html), .thk_ps_widget, .adsbar, .sidebar-ads-container, .ad-wrap:not(#google_ads_iframe_checktag), .box_ads, .ads.widget { display: none!important; }
-</style><script type="text/javascript" nonce="352a09d0baa4412e8fd1f1e4b42" src="//local.adguard.org?ts=1781701811690&amp;type=content-script&amp;dmn=chatgpt.com&amp;url=https%3A%2F%2Fchatgpt.com%2Fbackend-api%2Festuary%2Fcontent%3Fid%3Dfile_00000000a0007209a1086266149262b7%26ts%3D494925%26p%3Dfs%26cid%3D1%26sig%3D6277d70b489bc05da41bedbff31bb983d5c6e74050a97bb51f57e94aa7d61e82%26v%3D0&amp;app=com.microsoft.edgemac&amp;css=2&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-push&amp;st-loc&amp;st-java&amp;st-dnt"></script><script type="text/javascript" nonce="352a09d0baa4412e8fd1f1e4b42" src="//local.adguard.org?ts=1781701811690&amp;name=AdGuard%20Extra&amp;type=user-script"></script></head>
+</style><script type="text/javascript" nonce="352a09d0baa4412e8fd1f1e4b42" src="//local.adguard.org?ts=1781745012096&amp;type=content-script&amp;dmn=chatgpt.com&amp;url=https%3A%2F%2Fchatgpt.com%2Fbackend-api%2Festuary%2Fcontent%3Fid%3Dfile_00000000631c71fba055463edc9a791b%26fn%3D%25E3%2583%25A1%25E3%2583%25BC%25E3%2583%25AB%25E3%2581%25AE%25E5%25AE%259B%25E5%2585%2588%25E3%2583%25BBCC%25E3%2583%25BBBCC%25E3%2581%25AE%25E5%258B%2595%25E4%25BD%259C%25E3%2582%25B7%25E3%2583%259F%25E3%2583%25A5%25E3%2583%25AC%25E3%2583%25BC%25E3%2582%25BF%25E3%2583%25BC_%25E9%25BB%2584%25E8%2589%25B2%25E5%25BC%25B7%25E8%25AA%25BF%25E7%2589%2588.html%26cd%3Dattachment%26ts%3D494929%26p%3Dfs%26cid%3D1%26sig%3D274b0983098169c372c5601c8d85e42b5d4f98a1535d45a5e9c3020129aa26d8%26v%3D0&amp;app=com.microsoft.edgemac&amp;css=2&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-push&amp;st-loc&amp;st-java&amp;st-dnt"></script><script type="text/javascript" nonce="352a09d0baa4412e8fd1f1e4b42" src="//local.adguard.org?ts=1781745012096&amp;name=AdGuard%20Extra&amp;type=user-script"></script><script type="text/javascript" nonce="352a09d0baa4412e8fd1f1e4b42" src="//local.adguard.org?ts=1781701811690&amp;type=content-script&amp;dmn=chatgpt.com&amp;url=https%3A%2F%2Fchatgpt.com%2Fbackend-api%2Festuary%2Fcontent%3Fid%3Dfile_00000000a0007209a1086266149262b7%26ts%3D494925%26p%3Dfs%26cid%3D1%26sig%3D6277d70b489bc05da41bedbff31bb983d5c6e74050a97bb51f57e94aa7d61e82%26v%3D0&amp;app=com.microsoft.edgemac&amp;css=2&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-push&amp;st-loc&amp;st-java&amp;st-dnt"></script><script type="text/javascript" nonce="352a09d0baa4412e8fd1f1e4b42" src="//local.adguard.org?ts=1781701811690&amp;name=AdGuard%20Extra&amp;type=user-script"></script></head>
 <body>
   <main class="page">
     <header class="hero">
       <h1>メールの宛先・CC・BCCの動作シミュレーター</h1>
       <p class="subtitle">それぞれの受信者に、どの情報が見えるかを確認できます。</p>
+      <button type="button" id="resetButton" class="hero-reset">リセット</button>
     </header>
 
     <section class="compose" aria-label="メール作成">
@@ -547,8 +620,7 @@ iframe[id][height^="  "] { visibility: hidden !important; }
         <textarea id="body" rows="5">あそぼう</textarea>
         <div class="actions">
           <div id="selectionSummary">受信者はまだ選択されていません。</div>
-          <button type="button" id="resetButton">リセット</button>
-          <button type="button" id="sendButton">送信</button>
+          <button type="button" id="sendButton" class="soft-pulse">送信</button>
         </div>
       </div>
     </section>
@@ -676,6 +748,16 @@ iframe[id][height^="  "] { visibility: hidden !important; }
       return `<div class="mail-row"><div class="mail-label">${label}</div><div>${value}</div></div>`;
     }
 
+    function highlightSendButton() {
+      document.getElementById('sendButton').classList.add('soft-pulse');
+      document.getElementById('resetButton').classList.remove('soft-pulse');
+    }
+
+    function highlightResetButton() {
+      document.getElementById('sendButton').classList.remove('soft-pulse');
+      document.getElementById('resetButton').classList.add('soft-pulse');
+    }
+
     function resetSimulator() {
       document.querySelectorAll('.recipient-grid input[type="checkbox"]').forEach(input => {
         input.checked = false;
@@ -695,6 +777,8 @@ iframe[id][height^="  "] { visibility: hidden !important; }
         status.className = 'status empty';
         status.textContent = 'まだメールは届いていません。';
       });
+
+      highlightSendButton();
     }
 
     function sendEmail() {
@@ -727,6 +811,8 @@ iframe[id][height^="  "] { visibility: hidden !important; }
         content += `<div class="mail-body"><strong>本文</strong><br>${escapeHtml(body).replace(/\n/g, '<br>')}</div>`;
         status.innerHTML = content;
       });
+
+      highlightResetButton();
     }
 
     // 保存済みHTML内に項目があるため、再生成せず元の見た目をそのまま使用します。
